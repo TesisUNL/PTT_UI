@@ -3,6 +3,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 // ----------------------------------------------------------------------
 
 export function fDate(date) {
+  console.log('date', date)
   return format(new Date(date), 'dd MMMM yyyy');
 }
 

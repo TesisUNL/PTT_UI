@@ -1,9 +1,12 @@
+import './locales/i18n';
 // scroll bar
 import 'simplebar/src/simplebar.css';
 
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { CollapseDrawerProvider } from './context/CollapseDrawerContext';
+import { SettingsProvider } from './context/SettingsContext';
 
 //
 import App from './App';
@@ -16,9 +19,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <HelmetProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <SettingsProvider>
+      <CollapseDrawerProvider>
+        <Router>
+          <App />
+        </Router>
+      </CollapseDrawerProvider>
+    </SettingsProvider>
   </HelmetProvider>
 );
 

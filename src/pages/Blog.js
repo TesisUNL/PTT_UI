@@ -2,11 +2,12 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Page from '../components/Page';
 import Iconify from '../components/common/Iconify';
 import { BlogPostCard, BlogPostsSearch } from '../sections/@dashboard/blog';
 import { ProductFilterSidebar } from '../sections/@dashboard/products';
+import { getAttractions } from '../services/attraction.service';
 
 // mock
 import POSTS from '../_mock/blog';
@@ -16,6 +17,18 @@ import POSTS from '../_mock/blog';
 
 export default function Blog() {
   const [openFilter, setOpenFilter] = useState(false);
+  const [attractions, setAttractions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  
+  const fetchAttractions = async (filters, order) => {
+    const attractions = await getAttractions({ filters, order });
+    if (attractions) setAttractions(attractions?.data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchAttractions(); 
+  }, []);
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -53,8 +66,8 @@ export default function Blog() {
         </Stack>
 
         <Grid container spacing={3}>
-          {POSTS.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
+          {attractions?.map((attraction, index) => (
+            <BlogPostCard key={attraction.id} post={attraction} index={index} />
           ))}
         </Grid>
       </Container>

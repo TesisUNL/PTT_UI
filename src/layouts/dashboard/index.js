@@ -29,7 +29,6 @@ const MainStyle = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2)
   }
 }));
-
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {

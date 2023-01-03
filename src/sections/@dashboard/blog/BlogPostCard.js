@@ -50,13 +50,18 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, view, createdAt } = post;
+  const { cover_image: cover, name: title, view, created_at: createdAt } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
-  const POST_INFO = [
+  const ATTRACTION_INFO = [
     { number: view, icon: 'eva:eye-fill' },
   ];
+
+  const onErrorLoadImage = (e) => {
+    e.target.onerror = null
+    e.target.src = '/static/mock-images/covers/cover_1.jpg'
+  }
 
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
@@ -83,7 +88,7 @@ export default function BlogPostCard({ post, index }) {
           }}
         >
           
-          <CoverImgStyle alt={title} src={cover} />
+          <CoverImgStyle alt={title} src={cover} onError={onErrorLoadImage} />
         </CardMediaStyle>
 
         <CardContent
@@ -96,7 +101,9 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <Typography gutterBottom variant="caption" sx={{ color: 'inherit', display: 'block' }}>
+          <Typography gutterBottom variant="caption" sx={{  ...((latestPostLarge || latestPost) && {
+                color: 'common.white',
+              }), display: 'block' }}>
             {fDate(createdAt)}
           </Typography>
 
@@ -117,7 +124,7 @@ export default function BlogPostCard({ post, index }) {
           </TitleStyle>
 
           <InfoStyle>
-            {POST_INFO.map((info, index) => (
+            {ATTRACTION_INFO.map((info, index) => (
               <Box
                 key={index}
                 sx={{

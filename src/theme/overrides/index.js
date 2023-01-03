@@ -9,6 +9,7 @@ import Backdrop from './Backdrop';
 import Typography from './Typography';
 import CssBaseline from './CssBaseline';
 import Autocomplete from './Autocomplete';
+import DataGrid from './DataGrid';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ export default function ComponentsOverrides(theme) {
     Tooltip(theme),
     Backdrop(theme),
     Typography(theme),
+    DataGrid(theme),
     CssBaseline(theme),
     Autocomplete(theme)
   );

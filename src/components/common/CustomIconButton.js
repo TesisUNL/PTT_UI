@@ -8,6 +8,7 @@ CustomIconButton.propTypes = {
   title: PropTypes.string,
   color: PropTypes.string,
   placement: PropTypes.string,
+  sx: PropTypes.object,
 };
 
 export default function CustomIconButton({
@@ -16,11 +17,12 @@ export default function CustomIconButton({
   title,
   color = 'primary.main',
   placement = 'right',
+  sx= {}
 }){
   return (
     <Tooltip title={title} placement={placement} arrow >
     <IconButton
-      sx={{ color }}
+      sx={{ color,  ...sx}}
       aria-label={title}
       onClick={onClick}
     >

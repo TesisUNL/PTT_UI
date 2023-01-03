@@ -13,7 +13,10 @@
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
       "impliedStrict": true
-    }
+    },
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    },
   },
   "rules": {
     "no-new": 0,

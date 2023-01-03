@@ -1,26 +1,81 @@
-// component
-import Iconify from '../../components/common/Iconify';
+// routes
+import { PATH_DASHBOARD } from '../../routes/paths';
+// components
+import SvgIconStyle from '../../components/SvgIconStyle';
 
 // ----------------------------------------------------------------------
 
-const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
+const getIcon = (name) => (
+  <SvgIconStyle src={`/static/icons/navbar/${name}.svg`} sx={{ width: '100%', height: '100%' }} />
+);
 
-const navConfig = [
+const ICONS = {
+  blog: getIcon('ic_blog'),
+  cart: getIcon('ic_cart'),
+  user: getIcon('ic_user'),
+  banking: getIcon('ic_banking'),
+  ecommerce: getIcon('ic_ecommerce'),
+  dashboard: getIcon('ic_dashboard'),
+  booking: getIcon('ic_booking')
+};
+
+const NavConfig = [
+  // GENERAL
+  // ----------------------------------------------------------------------
   {
-    title: 'dashboard',
-    path: '/dashboard/attraction',
-    icon: getIcon('eva:pie-chart-2-fill'),
+    subheader: 'general',
+    items: [{ title: 'booking', path: "/dashboard/user", icon: ICONS?.booking }]
   },
+
+  // MANAGEMENT
+  // ----------------------------------------------------------------------
   {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: getIcon('eva:people-fill'),
-  },
-  {
-    title: 'product',
-    path: '/dashboard/products',
-    icon: getIcon('eva:shopping-bag-fill'),
-  },
+    subheader: 'management',
+    items: [
+      // MANAGEMENT : USER
+      {
+        title: 'user',
+        path: "dashboard/user",
+        icon: ICONS?.user,
+        children: [
+          { title: 'profile', path: "/dashboard/user/profile" },
+          { title: 'cards', path: "dashboard/user/cards" },
+          { title: 'list', path: "dashboard/user/list"},
+          { title: 'create', path: "dashboard/user/create" },
+          { title: 'edit', path: "dashboard/user/edit" },
+          { title: 'account', path:"dashboard/user/account" }
+        ]
+      },
+
+      // MANAGEMENT : E-COMMERCE
+      {
+        title: 'e-commerce',
+        path: "/",
+        icon: ICONS?.cart,
+        children: [
+          { title: 'shop', path: "/" },
+          { title: 'product', path: "/"},
+          { title: 'list', path: "/" },
+          { title: 'create', path: "/" },
+          { title: 'edit', path: "/" },
+          { title: 'checkout', path: "/" },
+          { title: 'invoice', path: "/" }
+        ]
+      },
+
+      // MANAGEMENT : BLOG
+      {
+        title: 'blog',
+        path: "/",
+        icon: ICONS?.blog,
+        children: [
+          { title: 'posts', path:"/" },
+          { title: 'post', path: "/" },
+          { title: 'new post', path: "/" }
+        ]
+      }
+    ]
+  }
 ];
 
-export default navConfig;
+export default NavConfig;

@@ -56,6 +56,7 @@ function useProviderAuth() {
   }, [navigate]);
 
   return {
+    isAuthenticated: isLogged,
     user,
     login,
     logout,

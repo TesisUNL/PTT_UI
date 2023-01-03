@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 // material
-import { Card, Stack, Container, Typography, Menu, MenuItem, Button } from '@mui/material';
+import { Card, Stack, Container, Typography, Menu, MenuItem, Button} from '@mui/material';
 
 // toast
 import { toast } from 'react-toastify';
@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useTheme } from '@mui/material/styles';
+import Label  from '../components/Label';
 import { ActiveOrDeleteForm } from '../forms/User';
 import { activeUser, deleteUser, getUsers, bulkUpdateUsers } from '../services/user.service';
 import Page from '../components/Page';
@@ -19,6 +21,23 @@ import CustomIconButton from '../components/common/CustomIconButton';
 import Iconify from '../components/common/Iconify';
 import { EditForm } from '../forms/User/Edit';
 import { ROLES } from '../utils/constants';
+import { MAvatar } from '../components/@material-extend';
+import createAvatar from '../utils/createAvatar';
+
+function RenderRole(getRole) {
+  const theme = useTheme();
+  const isLight = theme.palette.mode === 'light';
+  return (
+    <Label
+      variant={isLight ? 'ghost' : 'filled'}
+      color={(getRole === 'User' && 'warning') || (getRole === 'Admin' && 'success') || 'error'}
+      sx={{ textTransform: 'capitalize', mx: 'auto' }}
+    >
+      {getRole}
+    </Label>
+  );
+}
+
 
 export default function User() {
   const initialStateGrid = {
@@ -76,6 +95,23 @@ export default function User() {
 
   const userColumns = [
     {
+      field: 'avatar',
+      headerName: 'Avatar',
+      width: 64,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      align: 'center',
+      renderCell: (params) => {
+        const getAvatar = params.getValue(params.id, 'name');
+        return (
+          <MAvatar color={createAvatar(getAvatar).color} sx={{ width: 36, height: 36 }}>
+            {createAvatar(getAvatar).name}
+          </MAvatar>
+        );
+      }
+    },
+    {
       field: 'name',
       headerName: 'Name',
       flex: 1,
@@ -89,16 +125,32 @@ export default function User() {
     },
     {
       field: 'role',
+      type: 'singleSelect',
       headerName: 'Role',
-      flex: 1,
-      minWidth: 100,
+      width: 120,
+      valueOptions: ['User', 'Any', 'Admin'],
+      renderCell: (params) => {
+        const getRole = params.getValue(params.id, 'role');
+        return RenderRole(getRole);
+      }
     },
     {
       field: 'isActive',
-      headerName: 'isActive',
+      headerName: 'Active',
       type: 'boolean',
-      flex: 1,
-      minWidth: 50,
+      width: 120,
+      renderCell: (params) => {
+        const getAdmin = params.getValue(params.id, 'isActive');
+        return (
+          <Stack alignItems="center" sx={{ width: 1, textAlign: 'center' }}>
+            {getAdmin ? (
+              <Iconify sx={{ width: 20, height: 20, color: 'primary.main'}} icon="eva:checkmark-circle-2-fill"/>
+            ) : (
+              '-'
+            )}
+          </Stack>
+        );
+      }
     },
     {
       field: 'actions',
@@ -111,7 +163,7 @@ export default function User() {
       renderCell: (params) => {
         const { id, isActive, role } = params.row;
         return (
-          <div>
+          <Stack alignItems={"center"} direction="row" width={"100%"} justifyContent={"center"}>
             {isActive ? (
               <>
                 <CustomIconButton
@@ -133,7 +185,7 @@ export default function User() {
                     setOpenEditModal(true);
                   }}
                   title="Edit"
-                  color="secondary.main"
+                  color="primary.main"
                   icon="eva:edit-2-outline"
                 />
               </>
@@ -148,7 +200,7 @@ export default function User() {
                 icon="eva:checkmark-circle-outline"
               />
             )}
-          </div>
+          </Stack>
         );
       },
     },
@@ -312,6 +364,13 @@ export default function User() {
               <div style={{ flexGrow: 1 }}>
                 <DataGrid
                   rows={users}
+                  localeText={{
+    toolbarDensity: 'Size',
+    toolbarDensityLabel: 'Size',
+    toolbarDensityCompact: 'Small',
+    toolbarDensityStandard: 'Medium',
+    toolbarDensityComfortable: 'Large',
+  }}
                   initialState={initialStateGrid}
                   columns={userColumns}
                   isRowSelectable={(params) => params.row.isActive}
@@ -327,6 +386,7 @@ export default function User() {
                   disableSelectionOnClick
                   components={{ Toolbar: GridToolbar }}
                   getRowHeight={() => 'auto'}
+                  
                 />
               </div>
             </div>

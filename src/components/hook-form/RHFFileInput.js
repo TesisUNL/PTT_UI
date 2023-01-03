@@ -10,12 +10,12 @@ FileInput.propTypes = {
   multiple: PropTypes.bool
 };
 
-const thumbsContainer = {
+/* const thumbsContainer = {
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
   marginTop: 16
-};
+}; */
 
 function FileInput(props) {
   const { name, label = name, multiple = false } = props;
