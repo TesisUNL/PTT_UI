@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 // material
-import { Card, Stack, Container, Typography, Menu, MenuItem, Button} from '@mui/material';
+import { Card, Stack, Container, Menu, MenuItem, Button } from '@mui/material';
 
 // toast
 import { toast } from 'react-toastify';
@@ -10,7 +10,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTheme } from '@mui/material/styles';
-import Label  from '../components/Label';
+import Label from '../components/Label';
 import { ActiveOrDeleteForm } from '../forms/User';
 import { activeUser, deleteUser, getUsers, bulkUpdateUsers } from '../services/user.service';
 import Page from '../components/Page';
@@ -23,6 +23,9 @@ import { EditForm } from '../forms/User/Edit';
 import { ROLES } from '../utils/constants';
 import { MAvatar } from '../components/@material-extend';
 import createAvatar from '../utils/createAvatar';
+import useSettings from '../hooks/useSettings';
+import HeaderBreadcrumbs from '../components/HeaderBreadcrumbs';
+import { PATH_DASHBOARD } from '../routes/paths';
 
 function RenderRole(getRole) {
   const theme = useTheme();
@@ -38,8 +41,8 @@ function RenderRole(getRole) {
   );
 }
 
-
 export default function User() {
+  const { themeStretch } = useSettings();
   const initialStateGrid = {
     filter: {
       filterModel: {
@@ -90,8 +93,6 @@ export default function User() {
   const [openActivateModal, setOpenActivateModal] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [countUsersDelete, setCountUsersDelete] = useState(0);
-  const [multiSelectAnchorEl, setMultiSelectAnchorEl] = useState(null);
-  const open = Boolean(multiSelectAnchorEl);
 
   const userColumns = [
     {
@@ -104,12 +105,13 @@ export default function User() {
       align: 'center',
       renderCell: (params) => {
         const getAvatar = params.getValue(params.id, 'name');
+        const image = params.getValue(params.id, 'imageUrl')
         return (
-          <MAvatar color={createAvatar(getAvatar).color} sx={{ width: 36, height: 36 }}>
+          <MAvatar color={createAvatar(getAvatar).color} sx={{ width: 36, height: 36 }} src={image}>
             {createAvatar(getAvatar).name}
           </MAvatar>
         );
-      }
+      },
     },
     {
       field: 'name',
@@ -132,7 +134,7 @@ export default function User() {
       renderCell: (params) => {
         const getRole = params.getValue(params.id, 'role');
         return RenderRole(getRole);
-      }
+      },
     },
     {
       field: 'isActive',
@@ -144,13 +146,13 @@ export default function User() {
         return (
           <Stack alignItems="center" sx={{ width: 1, textAlign: 'center' }}>
             {getAdmin ? (
-              <Iconify sx={{ width: 20, height: 20, color: 'primary.main'}} icon="eva:checkmark-circle-2-fill"/>
+              <Iconify sx={{ width: 20, height: 20, color: 'primary.main' }} icon="eva:checkmark-circle-2-fill" />
             ) : (
               '-'
             )}
           </Stack>
         );
-      }
+      },
     },
     {
       field: 'actions',
@@ -163,7 +165,7 @@ export default function User() {
       renderCell: (params) => {
         const { id, isActive, role } = params.row;
         return (
-          <Stack alignItems={"center"} direction="row" width={"100%"} justifyContent={"center"}>
+          <Stack alignItems={'center'} direction="row" width={'100%'} justifyContent={'center'}>
             {isActive ? (
               <>
                 <CustomIconButton
@@ -208,12 +210,12 @@ export default function User() {
 
   const multipleUserActions = [
     {
-      label: 'Edit',
+      label: 'Edit Role',
       icon: 'eva:edit-2-outline',
       color: 'secondary.main',
       onClick: () => {
         resetEdit({ userId: selectedUsers, role: '' });
-        handleMenuOptionsClose();
+        // handleMenuOptionsClose();
         setOpenEditModal(true);
       },
     },
@@ -224,15 +226,15 @@ export default function User() {
       onClick: () => {
         reset({ userId: selectedUsers });
         setCountUsersDelete(selectedUsers.length);
-        handleMenuOptionsClose();
+        // handleMenuOptionsClose();
         setOpenDeleteModal(true);
       },
     },
   ];
 
   const showToastMessage = (isSuccessful, messages) => {
-    const messageToShow = isSuccessful ? messages.success : messages.error
-    toast(messageToShow, { type: isSuccessful? 'success': 'error'})
+    const messageToShow = isSuccessful ? messages.success : messages.error;
+    toast(messageToShow, { type: isSuccessful ? 'success' : 'error' });
   };
 
   const fetchUsers = async () => {
@@ -241,13 +243,6 @@ export default function User() {
     setLoading(false);
   };
 
-  const handleMenuOptionsClick = (event) => {
-    setMultiSelectAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuOptionsClose = () => {
-    setMultiSelectAnchorEl(null);
-  };
 
   const onSubmitEdit = async (data) => {
     const { userId, role } = data;
@@ -315,46 +310,66 @@ export default function User() {
     fetchUsers();
   }, []);
 
+  const UserActions = () => 
+  {
+    const [multiSelectAnchorEl, setMultiSelectAnchorEl] = useState(null);
+    const open = Boolean(multiSelectAnchorEl);
+
+    const handleMenuOptionsClick = (event) => {
+      setMultiSelectAnchorEl(event.currentTarget);
+    };
+  
+    const handleMenuOptionsClose = () => {
+      setMultiSelectAnchorEl(null);
+    };
+
+
+    return (selectedUsers?.length > 0 ? (
+      <>
+        <Button
+          id="basic-button"
+          variant="contained"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleMenuOptionsClick}
+          startIcon={open ? <Iconify icon="eva:arrow-up-outline" /> : <Iconify icon="eva:arrow-down-outline" />}
+        >
+          Modificar Usuarios
+        </Button>
+
+        <Menu
+          id="basic-menu"
+          anchorEl={multiSelectAnchorEl}
+          open={open}
+          onClose={handleMenuOptionsClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+          {multipleUserActions.map((action, index) => (
+            <MenuItem key={index} onClick={() => action.onClick()} sx={{ color: action.color }}>
+              {action?.icon ? <Iconify icon={action.icon} /> : null}
+              {action.label}
+            </MenuItem>
+          ))}
+        </Menu>
+      </>
+    ) : null)
+  };
+
   return (
     <Page title="User">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-          {selectedUsers.length > 0 && (
-            <div>
-              <Button
-                id="basic-button"
-                variant="contained"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleMenuOptionsClick}
-                startIcon={open ? <Iconify icon="eva:arrow-up-outline" /> : <Iconify icon="eva:arrow-down-outline" />}
-              >
-                Modificar Usuarios
-              </Button>
-
-              <Menu
-                id="basic-menu"
-                anchorEl={multiSelectAnchorEl}
-                open={open}
-                onClose={handleMenuOptionsClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
-              >
-                {multipleUserActions.map((action, index) => (
-                  <MenuItem key={index} onClick={() => action.onClick()} sx={{ color: action.color }}>
-                    {action?.icon ? <Iconify icon={action.icon} /> : null}
-                    {action.label}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </div>
-          )}
-        </Stack>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+          <HeaderBreadcrumbs
+            heading="User List"
+            links={[
+              { name: 'Dashboard', href: PATH_DASHBOARD.root },
+              { name: 'User', href: PATH_DASHBOARD.user.root },
+              { name: 'List' },
+            ]}
+            action={<UserActions />}
+          />
 
         <Card>
           {isLoading ? (
@@ -365,12 +380,12 @@ export default function User() {
                 <DataGrid
                   rows={users}
                   localeText={{
-    toolbarDensity: 'Size',
-    toolbarDensityLabel: 'Size',
-    toolbarDensityCompact: 'Small',
-    toolbarDensityStandard: 'Medium',
-    toolbarDensityComfortable: 'Large',
-  }}
+                    toolbarDensity: 'Size',
+                    toolbarDensityLabel: 'Size',
+                    toolbarDensityCompact: 'Small',
+                    toolbarDensityStandard: 'Medium',
+                    toolbarDensityComfortable: 'Large',
+                  }}
                   initialState={initialStateGrid}
                   columns={userColumns}
                   isRowSelectable={(params) => params.row.isActive}
@@ -386,13 +401,11 @@ export default function User() {
                   disableSelectionOnClick
                   components={{ Toolbar: GridToolbar }}
                   getRowHeight={() => 'auto'}
-                  
                 />
               </div>
             </div>
           )}
         </Card>
-
       </Container>
 
       <CustomModal

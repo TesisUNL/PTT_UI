@@ -36,8 +36,8 @@ export const PATH_DASHBOARD = {
 /*     editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`), */
 /*     account: path(ROOTS_DASHBOARD, '/user/account') */
   },
-  blog: {
-    root: path(ROOTS_DASHBOARD, '/blog'),
+  attraction: {
+    root: path(ROOTS_DASHBOARD, '/attraction'),
     posts: path(ROOTS_DASHBOARD, '/blog/posts'),
 /*     post: path(ROOTS_DASHBOARD, '/blog/post/:title'),
     postById: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),

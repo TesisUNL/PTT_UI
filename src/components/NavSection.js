@@ -13,7 +13,7 @@ const ListSubheaderStyle = styled((props) => <ListSubheader disableSticky disabl
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
     paddingLeft: theme.spacing(5),
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   })
 );
 
@@ -35,24 +35,24 @@ const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props
     position: 'absolute',
     borderTopLeftRadius: 4,
     borderBottomLeftRadius: 4,
-    backgroundColor: theme.palette.primary.main
-  }
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
-const ListItemIconStyle = styled(ListItemIcon)({
+const ListItemIconStyle = styled((props) => <ListItemIcon {...props} />)(() => ({
   width: 22,
   height: 22,
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center'
-});
+  justifyContent: 'center',
+}));
 
 // ----------------------------------------------------------------------
 
 NavItem.propTypes = {
   active: PropTypes.func,
   isShow: PropTypes.bool,
-  item: PropTypes.object
+  item: PropTypes.object,
 };
 
 function NavItem({ item, active, isShow }) {
@@ -61,7 +61,7 @@ function NavItem({ item, active, isShow }) {
   const { title, path, icon, info, children } = item;
 
   const [open, setOpen] = useState(isActiveRoot);
-  
+
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
@@ -70,12 +70,12 @@ function NavItem({ item, active, isShow }) {
     color: 'primary.main',
     fontWeight: 'fontWeightMedium',
     bgcolor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-    '&:before': { display: 'block' }
+    '&:before': { display: 'block' },
   };
 
   const activeSubStyle = {
     color: 'text.primary',
-    fontWeight: 'fontWeightMedium'
+    fontWeight: 'fontWeightMedium',
   };
 
   if (children) {
@@ -84,16 +84,25 @@ function NavItem({ item, active, isShow }) {
         <ListItemStyle
           onClick={handleOpen}
           sx={{
-            ...(isActiveRoot && activeRootStyle)
+            ...(isActiveRoot && activeRootStyle),
           }}
         >
-          <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+          <ListItemIconStyle
+            sx={{
+              ...(!isShow && { minWidth: 22 }),
+            }}
+          >
+            {icon && icon}
+          </ListItemIconStyle>
 
           {isShow && (
             <>
               <ListItemText disableTypography primary={title} />
               {info && info}
-              <Iconify sx={{ display:"flex", justifyContent: "center", width: 16, height: 16, ml: 1 }} icon={open ? "eva:arrow-ios-forward-fill" : "eva:arrow-ios-downward-fill" } />
+              <Iconify
+                sx={{ display: 'flex', justifyContent: 'center', width: 16, height: 16, ml: 1 }}
+                icon={open ? 'eva:arrow-ios-forward-fill' : 'eva:arrow-ios-downward-fill'}
+              />
             </>
           )}
         </ListItemStyle>
@@ -111,7 +120,7 @@ function NavItem({ item, active, isShow }) {
                     component={RouterLink}
                     to={path}
                     sx={{
-                      ...(isActiveSub && activeSubStyle)
+                      ...(isActiveSub && activeSubStyle),
                     }}
                   >
                     <ListItemIconStyle>
@@ -128,8 +137,8 @@ function NavItem({ item, active, isShow }) {
                           transition: (theme) => theme.transitions.create('transform'),
                           ...(isActiveSub && {
                             transform: 'scale(2)',
-                            bgcolor: 'primary.main'
-                          })
+                            bgcolor: 'primary.main',
+                          }),
                         }}
                       />
                     </ListItemIconStyle>
@@ -149,10 +158,16 @@ function NavItem({ item, active, isShow }) {
       component={RouterLink}
       to={path}
       sx={{
-        ...(isActiveRoot && activeRootStyle)
+        ...(isActiveRoot && activeRootStyle),
       }}
     >
-      <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
+      <ListItemIconStyle
+        sx={{
+          ...(!isShow && { minWidth: 22 }),
+        }}
+      >
+        {icon && icon}
+      </ListItemIconStyle>
       {isShow && (
         <>
           <ListItemText disableTypography primary={title} />
@@ -165,7 +180,7 @@ function NavItem({ item, active, isShow }) {
 
 NavSection.propTypes = {
   isShow: PropTypes.bool,
-  navConfig: PropTypes.array
+  navConfig: PropTypes.array,
 };
 
 export default function NavSection({ navConfig, isShow = true, ...other }) {

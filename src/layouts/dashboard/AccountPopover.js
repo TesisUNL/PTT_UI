@@ -1,13 +1,19 @@
+import { Icon } from '@iconify/react';
+// import { useSnackbar } from 'notistack5';
 import { useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-// @mui
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+// material
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
-// components
-import MenuPopover from '../../components/MenuPopover';
-// mocks_
-import account from '../../_mock/account';
+import { Button, Box, Divider, MenuItem, Typography } from '@mui/material';
+// routes
+// import { PATH_DASHBOARD } from '../../routes/paths';
+// hooks
 import { useAuth } from '../../hooks/useAuth';
+import useIsMountedRef from '../../hooks/useIsMountedRef';
+// components
+import { MIconButton } from '../../components/@material-extend';
+import MyAvatar from '../../components/MyAvatar';
+import MenuPopover from '../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
 
@@ -15,48 +21,59 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
-    linkTo: '/',
+    linkTo: '/'
   },
-  // {
-  //   label: 'Profile',
-  //   icon: 'eva:person-fill',
-  //   linkTo: '#',
-  // },
-  // {
-  //   label: 'Settings',
-  //   icon: 'eva:settings-2-fill',
-  //   linkTo: '#',
-  // },
+  {
+    label: 'Profile',
+    icon: 'eva:person-fill',
+    linkTo: '/users' // PATH_DASHBOARD.user.profile
+  },
+  {
+    label: 'Settings',
+    icon: 'eva:settings-2-fill',
+    linkTo: 'settings' // PATH_DASHBOARD.user.account
+  }
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const {logout, user } = useAuth();
   const anchorRef = useRef(null);
+  const navigate = useNavigate();
+  // const { enqueueSnackbar } = useSnackbar();
+  const isMountedRef = useIsMountedRef();
+  const { user, logout } = useAuth();
+  const [open, setOpen] = useState(false);
 
-  const [open, setOpen] = useState(null);
-
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpen = () => {
+    setOpen(true);
   };
-
   const handleClose = () => {
-    setOpen(null);
+    setOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+      if (isMountedRef.current) {
+        handleClose();
+      }
+    } catch (error) {
+      console.error(error);
+     // enqueueSnackbar('Unable to logout', { variant: 'error' });
+    }
   };
-
 
   return (
     <>
-      <IconButton
+      <MIconButton
         ref={anchorRef}
         onClick={handleOpen}
         sx={{
-          p: 0,
+          padding: 0,
+          width: 44,
+          height: 44,
           ...(open && {
             '&:before': {
               zIndex: 1,
@@ -65,52 +82,53 @@ export default function AccountPopover() {
               height: '100%',
               borderRadius: '50%',
               position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
-            },
-          }),
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72)
+            }
+          })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
-      </IconButton>
+        <MyAvatar />
+      </MIconButton>
 
-      <MenuPopover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        sx={{
-          p: 0,
-          mt: 1.5,
-          ml: 0.75,
-          '& .MuiMenuItem-root': {
-            typography: 'body2',
-            borderRadius: 0.75,
-          },
-        }}
-      >
+      <MenuPopover open={open} onClose={handleClose} anchorEl={anchorRef.current} sx={{ width: 220 }}>
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {user?.name}
+          <Typography variant="subtitle1" noWrap>
+            {user.displayName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
+            {user.email}
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ my: 1 }} />
 
-        <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Stack>
+        {MENU_OPTIONS.map((option) => (
+          <MenuItem
+            key={option.label}
+            to={option.linkTo}
+            component={RouterLink}
+            onClick={handleClose}
+            sx={{ typography: 'body2', py: 1, px: 2.5 }}
+          >
+            <Box
+              component={Icon}
+              icon={option.icon}
+              sx={{
+                mr: 2,
+                width: 24,
+                height: 24
+              }}
+            />
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+            {option.label}
+          </MenuItem>
+        ))}
 
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
-        </MenuItem>
+        <Box sx={{ p: 2, pt: 1.5 }}>
+          <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Box>
       </MenuPopover>
     </>
   );

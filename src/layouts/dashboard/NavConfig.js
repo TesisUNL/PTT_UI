@@ -66,10 +66,10 @@ const NavConfig = [
       // MANAGEMENT : BLOG
       {
         title: 'blog',
-        path: "/",
+        path: "/dashboard/attraction",
         icon: ICONS?.blog,
         children: [
-          { title: 'posts', path:"/" },
+          { title: 'posts', path:"/dashboard/attraction" },
           { title: 'post', path: "/" },
           { title: 'new post', path: "/" }
         ]
