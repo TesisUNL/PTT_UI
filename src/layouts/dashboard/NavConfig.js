@@ -24,7 +24,7 @@ const NavConfig = [
   // ----------------------------------------------------------------------
   {
     subheader: 'general',
-    items: [{ title: 'booking', path: "/dashboard/user", icon: ICONS?.booking }]
+    items: [{ title: 'General', path: PATH_DASHBOARD.root, icon: ICONS?.dashboard }]
   },
 
   // MANAGEMENT
@@ -35,43 +35,22 @@ const NavConfig = [
       // MANAGEMENT : USER
       {
         title: 'user',
-        path: "dashboard/user",
+        path: PATH_DASHBOARD.user.root,
         icon: ICONS?.user,
         children: [
-          { title: 'profile', path: "/dashboard/user/profile" },
-          { title: 'cards', path: "dashboard/user/cards" },
-          { title: 'list', path: "dashboard/user/list"},
-          { title: 'create', path: "dashboard/user/create" },
-          { title: 'edit', path: "dashboard/user/edit" },
-          { title: 'account', path:"dashboard/user/account" }
+          { title: 'list', path: PATH_DASHBOARD.user.list },
         ]
       },
 
-      // MANAGEMENT : E-COMMERCE
+      // MANAGEMENT : attraction
       {
-        title: 'e-commerce',
-        path: "/",
-        icon: ICONS?.cart,
+        title: 'attraction',
+        path:  PATH_DASHBOARD.attraction.root,
+        icon: ICONS?.booking,
         children: [
-          { title: 'shop', path: "/" },
-          { title: 'product', path: "/"},
-          { title: 'list', path: "/" },
-          { title: 'create', path: "/" },
-          { title: 'edit', path: "/" },
-          { title: 'checkout', path: "/" },
-          { title: 'invoice', path: "/" }
-        ]
-      },
-
-      // MANAGEMENT : BLOG
-      {
-        title: 'blog',
-        path: "/dashboard/attraction",
-        icon: ICONS?.blog,
-        children: [
-          { title: 'posts', path:"/dashboard/attraction" },
-          { title: 'post', path: "/" },
-          { title: 'new post', path: "/" }
+          { title: 'posts', path: PATH_DASHBOARD.attraction.list },
+ //         { title: 'post', path: "/" },
+          { title: 'new post', path: PATH_DASHBOARD.attraction.newPost }
         ]
       }
     ]

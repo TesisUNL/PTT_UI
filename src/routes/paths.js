@@ -30,15 +30,16 @@ export const PATH_DASHBOARD = {
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),
-    cards: path(ROOTS_DASHBOARD, '/user/cards'),
+  /*   cards: path(ROOTS_DASHBOARD, '/user/cards'), */
     list: path(ROOTS_DASHBOARD, '/user/list'),
-    newUser: path(ROOTS_DASHBOARD, '/user/new'),
+   /*  newUser: path(ROOTS_DASHBOARD, '/user/new'), */
 /*     editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`), */
 /*     account: path(ROOTS_DASHBOARD, '/user/account') */
   },
   attraction: {
     root: path(ROOTS_DASHBOARD, '/attraction'),
-    posts: path(ROOTS_DASHBOARD, '/blog/posts'),
+    newPost: path(ROOTS_DASHBOARD, '/attraction/new-post'),
+    list: path(ROOTS_DASHBOARD, '/attraction/list'),
 /*     post: path(ROOTS_DASHBOARD, '/blog/post/:title'),
     postById: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
     newPost: path(ROOTS_DASHBOARD, '/blog/new-post') */

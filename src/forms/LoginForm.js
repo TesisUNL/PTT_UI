@@ -1,12 +1,12 @@
-import * as Yup from 'yup';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 // form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Link, Stack, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { IconButton, InputAdornment, Link, Stack } from '@mui/material';
 
 // toast
 import { toast } from 'react-toastify';
@@ -50,7 +50,7 @@ export default function LoginForm() {
     const { email, password } = data;
     const isLogged = await auth.login(email, password);
     if (isLogged) {
-      navigate('/dashboard/attraction', { replace: true });
+      navigate('/dashboard', { replace: true });
     } else {
       reset(defaultValues);
       ['email', 'password'].forEach((field) => setError(field));

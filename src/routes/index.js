@@ -3,6 +3,7 @@ import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 import AuthGuard from '../guards/AuthGuard';
 import GuestGuard from '../guards/GuestGuard';
+import { PATH_DASHBOARD } from './paths';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -44,12 +45,11 @@ export default function Router() {
             </GuestGuard>
           ),
         },
-        { path: 'login-unprotected', element: <div /> },
-        { path: 'register-unprotected', element: <div /> },
         { path: 'reset-password', element: <div /> },
         { path: 'verify', element: <div /> },
       ],
     },
+
 
     // Dashboard Routes
     {
@@ -65,73 +65,28 @@ export default function Router() {
         {
           path: 'user',
           children: [
-            { path: '/dashboard/user/', element: <Navigate to="/dashboard/user/profile" replace /> },
-            { path: 'profile', element: <User /> },
-            { path: 'cards', element: <div /> },
-            { path: 'list', element: <div /> },
-            { path: 'new', element: <div /> },
-            { path: '/dashboard/user/:name/edit', element: <div /> },
-            { path: 'account', element: <div /> },
+            { path: PATH_DASHBOARD.user.root, element: <Navigate to="/dashboard/user/list" replace /> },
+            { path: PATH_DASHBOARD.user.list, element: <User /> },
           ],
         },
-        { path: 'products', element: <Products /> },
         { path: 'attraction', 
         children: [
-          { path: '/dashboard/attraction/', element: <Blog/> },
-          { path: 'profile', element: <User /> },
-          { path: 'cards', element: <div /> },
-          { path: 'list', element: <div /> },
-          { path: 'new', element: <div /> },
-          { path: 'account', element: <div /> },
-        ], },
-        { path: 'attraction/create', element: <CreateAttraction /> },
+          { path: PATH_DASHBOARD.attraction.root, element:  <Navigate to="/dashboard/attraction/list" replace /> },
+          { path: PATH_DASHBOARD.attraction.list, element: <Blog /> },
+          { path: PATH_DASHBOARD.attraction.newPost, element: <CreateAttraction />  },
+        ], }
       ],
     },
 
+
     // Main Routes
     {
-      path: '*',
+      path: '/',
       element: <LogoOnlyLayout />,
       children: [
-        { path: 'coming-soon', element: <div /> },
-        { path: 'maintenance', element: <div /> },
-        { path: 'pricing', element: <div /> },
-        { path: 'payment', element: <div /> },
+        { path: '/', element: <Navigate to="auth/login" /> },
         { path: '404', element: <NotFound/> },
         { path: '*', element: <Navigate to="/404" replace /> },
-      ],
-    },
-    {
-      path: '/',
-      element:  <AuthGuard>
-      <RoleBasedGuard accessibleRoles={['Admin']}>
-        <DashboardLayout />
-      </RoleBasedGuard>
-      </AuthGuard>,
-      children: [
-        /*         { path: '/', element: <div /> },
-        { path: 'about-us', element: <div /> },
-        { path: 'contact-us', element: <div /> },
-        { path: 'faqs', element: <div /> }, */
-        {
-          path: 'components',
-          children: [
-            { path: 'components/', element: <div /> },
-            // FOUNDATIONS
-            { path: 'color', element: <div /> },
-            { path: 'typography', element: <div /> },
-            { path: 'shadows', element: <div /> },
-            { path: 'grid', element: <div /> },
-            { path: 'icons', element: <div /> },
-            // MATERIAL UI
-            { path: 'accordion', element: <div /> },
-            { path: 'alert', element: <div /> },
-            { path: 'autocomplete', element: <div /> },
-            { path: 'avatar', element: <div /> },
-            { path: 'badge', element: <div /> },
-            // EXTRA COMPONENTS
-          ],
-        },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -146,7 +101,6 @@ const Login = Loadable(lazy(() => import('../pages/Login')));
 const Blog = Loadable(lazy(() => import('../pages/Blog')));
 const User = Loadable(lazy(() => import('../pages/User')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
-const Products = Loadable(lazy(() => import('../pages/Products')));
 const DashboardLayout = Loadable(lazy(() => import('../layouts/dashboard')));
 const LogoOnlyLayout = Loadable(lazy(() => import('../layouts/LogoOnlyLayout')));
 const CreateAttraction = Loadable(lazy(() => import('../pages/CreateAttraction')));

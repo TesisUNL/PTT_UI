@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled, alpha } from '@mui/material/styles';
-import { Box, Link, Drawer, Typography, Stack , Tooltip , CardActionArea , Button } from '@mui/material';
+import { Box, Link, Drawer, Typography, Stack , Tooltip , CardActionArea  } from '@mui/material';
 import { MHidden } from '../../components/@material-extend';
 // hooks
 // import useResponsive from '../../hooks/useResponsive';
@@ -98,7 +98,7 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const { user } = useAuth();
-  const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
+  const { isCollapse, collapseClick, collapseHover, onHoverEnter, onHoverLeave } =
   useCollapseDrawer();
 
 
@@ -134,19 +134,15 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         }}
       >
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Box component={RouterLink} to="/" sx={{ display: 'inline-flex' }}>
+          <Box component={RouterLink} to={PATH_DASHBOARD.root} sx={{ display: 'inline-flex' }}>
             <Logo />
           </Box>
-
-{/*           <MHidden width="lgDown">
-            {!isCollapse && <IconCollapse onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />}
-          </MHidden> */}
         </Stack>
 
         {isCollapse ? (
           <MyAvatar sx={{ mx: 'auto', mb: 2 }} />
         ) : (
-          <Link underline="none" component={RouterLink} to={'/dashboard/user'}>
+          <Link underline="none" component={RouterLink} to={PATH_DASHBOARD.root}>
             <AccountStyle>
               <MyAvatar />
               <Box sx={{ ml: 2 }}>
@@ -165,23 +161,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <NavSection navConfig={navConfig} isShow={!isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
-
-      {!isCollapse && (
-        <Stack spacing={3} alignItems="center" sx={{ px: 5, pb: 5, mt: 10, width: 1, textAlign: 'center' }}>
-          <div>
-            <Typography gutterBottom variant="subtitle1">
-              Hi, {user?.displayName}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Need help?
-              <br /> Please check our docs
-            </Typography>
-          </div>
-          <Button target="_blank" variant="contained">
-            Documentation
-          </Button>
-        </Stack>
-      )}
     </Scrollbar>
   );
 

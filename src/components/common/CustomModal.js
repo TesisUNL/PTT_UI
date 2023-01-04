@@ -28,6 +28,9 @@ export default function CustomModal({
     <Modal
       open={open}
       onClose={handleClose}
+      BackdropProps={{
+          timeout: 700,
+      }}
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
     >
@@ -55,6 +58,7 @@ export default function CustomModal({
           }
         </Typography>
       </Box>
+
     </Modal>
   )
 }
